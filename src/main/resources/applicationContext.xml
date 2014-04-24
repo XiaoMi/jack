@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans  
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd  
+    http://www.springframework.org/schema/context  
+    http://www.springframework.org/schema/context/spring-context-2.5.xsd
+    http://www.springframework.org/schema/task
+	http://www.springframework.org/schema/task/spring-task.xsd"
+    default-lazy-init="false">
+    
+
+    <context:annotation-config />
+    <context:component-scan base-package="com.xiaomi.micloud.jack">
+    </context:component-scan>
+  
+   <!-- stat Database jade数据库配置 -->
+   <bean id="jade.dataSource.com.xiaomi.micloud.jack.dao" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url"
+			value="jdbc:mysql://${mysql_host}:${mysql_port}/${mysql_db}?useUnicode=true&amp;characterEncoding=utf-8"></property>
+		<property name="username" value="${mysql_user}"></property>
+		<property name="password" value="${mysql_pwd}"></property>
+		<!--  运行判断连接超时任务的时间间隔，单位为毫秒，默认为-1，即不执行任务。-->
+		<property name="timeBetweenEvictionRunsMillis" value="3600000"></property>
+		<!-- 连接的超时时间，默认为半小时。 -->
+		<property name="minEvictableIdleTimeMillis" value="3600000"></property>
+	</bean>
+	
+    <bean id="jade.routerInterpreter" class="com.xiaomi.common.service.dal.routing.RewriteSQLInterpreter">  
+        <property name="routingConfigurator" ref="jade.routingConfigurator" />  
+	</bean>  
+	
+	<bean id="jade.routingConfigurator" class="com.xiaomi.common.service.dal.routing.RoutingConfigurator">  
+	        <property name="partitions"> 
+				<list>
+				<!-- database; -->
+				</list>  
+	        </property>  
+	</bean>  
+	
+</beans>
+
